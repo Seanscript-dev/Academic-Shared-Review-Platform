@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+
+{% block title %}Study {{ set.title }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h4>Studying: {{ set.title }}</h4>
+                    <span class="badge bg-primary">{{ cards|length }} cards</span>
+                </div>
+                <div class="card-body">
+                    <div id="flashcard-container">
+                        {% if cards %}
+                        <div class="text-center">
+                            <div id="card-display" class="border rounded p-4 mb-4" style="min-height: 200px; max-height: 400px; overflow-y: auto; cursor: pointer;" onclick="flipCard()">
+                                <div id="card-front" class="card-content">
+                                    <h5>Question</h5>
+                                    <p id="question-text" class="lead">{{ cards[0].question }}</p>
+                                </div>
+                                <div id="card-back" class="card-content d-none">
+                                    <h5>Answer</h5>
+                                    <p id="answer-text" class="lead">{{ cards[0].answer }}</p>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <button id="prev-btn" class="btn btn-outline-secondary" onclick="previousCard()" disabled>Previous</button>
+                                <span id="card-counter">1 / {{ cards|length }}</span>
+                                <button id="next-btn" class="btn btn-outline-primary" onclick="nextCard()">Next</button>
+                            </div>
+                        </div>
+                        {% else %}
+                        <div class="text-center">
+                            <p class="text-muted">No cards in this set to study.</p>
+                            <a href="{{ url_for('flashcards.view_set', set_id=set.id) }}" class="btn btn-primary">Add Cards</a>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="{{ url_for('flashcards.view_set', set_id=set.id) }}" class="btn btn-secondary">Back to Set</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Loading overlay -->
+<div id="loading-overlay" class="d-none" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; display: flex; justify-content: center; align-items: center;">
+    <div class="text-center text-white">
+        <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+        <p class="mt-2">Loading flashcards...</p>
+    </div>
+</div>
+
+<script>
+let currentCardIndex = 0;
+let isFlipped = false;
+const flashcardData = {{ cards|tojson }};
+
+function flipCard() {
+    const front = document.getElementById('card-front');
+    const back = document.getElementById('card-back');
+
+    if (isFlipped) {
+        front.classList.remove('d-none');
+        back.classList.add('d-none');
+    } else {
+        front.classList.add('d-none');
+        back.classList.remove('d-none');
+    }
+    isFlipped = !isFlipped;
+}
+
+function updateCard() {
+    if (flashcardData.length === 0) return;
+
+    const card = flashcardData[currentCardIndex];
+    document.getElementById('question-text').textContent = card.question;
+    document.getElementById('answer-text').textContent = card.answer;
+
+    // Reset to front side
+    document.getElementById('card-front').classList.remove('d-none');
+    document.getElementById('card-back').classList.add('d-none');
+    isFlipped = false;
+
+    // Update counter
+    document.getElementById('card-counter').textContent = `${currentCardIndex + 1} / ${flashcardData.length}`;
+
+    // Update button states
+    document.getElementById('prev-btn').disabled = currentCardIndex === 0;
+    document.getElementById('next-btn').disabled = currentCardIndex === flashcardData.length - 1;
+}
+
+function nextCard() {
+    if (currentCardIndex < flashcardData.length - 1) {
+        currentCardIndex++;
+        updateCard();
+    }
+}
+
+function previousCard() {
+    if (currentCardIndex > 0) {
+        currentCardIndex--;
+        updateCard();
+    }
+}
+
+// Initialize
+document.addEventListener('DOMContentLoaded', function() {
+    // Show loading overlay
+    const loadingOverlay = document.getElementById('loading-overlay');
+    loadingOverlay.classList.remove('d-none');
+
+    // Simulate loading time (you can remove this setTimeout in production)
+    setTimeout(function() {
+        loadingOverlay.classList.add('d-none');
+        updateCard();
+    }, 500); // 500ms loading time
+});
+</script>
+{% endblock %}

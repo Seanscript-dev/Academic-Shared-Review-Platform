@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block title %}Flashcard Sets - Review App{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/flashcards.css') }}">
+<!-- restore .btn-small visual styles for the Create New Set button -->
+<style>
+/* visual styling for small action buttons */
+.btn-small {
+  display: inline-block;
+  padding: 0.45rem 0.9rem;
+  font-size: 0.9rem;
+  border-radius: 6px;
+  background: var(--primary, #2563eb);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  line-height: 1;
+  box-shadow: 0 1px 0 rgba(0,0,0,0.05);
+  transition: background-color 120ms ease, box-shadow 120ms ease;
+}
+
+/* Hover/focus without transform movement */
+.btn-small:hover,
+.btn-small:focus {
+  background: color-mix(in srgb, var(--primary, #2563eb) 80%, black 20%);
+  box-shadow: 0 4px 12px rgba(37,99,235,0.12);
+  transform: none !important;
+  transition: background-color 120ms ease, box-shadow 120ms ease;
+}
+
+/* Danger variant if needed elsewhere */
+.btn-small.danger {
+  background: var(--danger, #e53e3e);
+}
+</style>
+<div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem;">
+    <h2 style="margin: 0; color: #2d3748;">Flashcard Sets</h2>
+    <button class="btn-small" data-bs-toggle="modal" data-bs-target="#createSetModal">Create New Set</button>
+</div>
+<div class="flashcard-container">
+    {% for set in sets %}
+    <div class="flashcard-set">
+        <div class="flashcard-title">{{ set.title }}</div>
+        <div class="flashcard-count">{{ set.cards|length }} cards</div>
+        <div class="flashcard-actions">
+            <a href="{{ url_for('flashcards.study_set', set_id=set.id) }}">Study</a>
+            <a href="{{ url_for('flashcards.view_set', set_id=set.id) }}">Manage</a>
+            <button type="button" class="danger" data-bs-toggle="modal" data-bs-target="#deleteSetModal{{ set.id }}">Delete</button>
+        </div>
+    </div>
+    <!-- Delete Set Modal -->
+    <div class="modal fade" id="deleteSetModal{{ set.id }}" tabindex="-1" aria-labelledby="deleteSetModalLabel{{ set.id }}" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteSetModalLabel{{ set.id }}">Delete Flashcard Set</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to delete "{{ set.title }}" and all its flashcards? This action cannot be undone.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <form method="post" action="{{ url_for('flashcards.delete_set', set_id=set.id) }}" style="display: inline;">
+                        <button type="submit" class="btn btn-danger">Delete Set</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% if not sets %}
+<div style="text-align:center; margin-top:3rem;">
+    <p style="color:#718096;">No flashcard sets created yet.</p>
+    <button class="btn-small">Create Your First Set</button>
+</div>
+{% endif %}
+
+<!-- Create Set Modal -->
+<div class="modal fade" id="createSetModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create New Flashcard Set</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="createSetForm" method="post" action="{{ url_for('flashcards.create_set') }}">
+                    <div class="mb-3">
+                        <label for="setTitle" class="form-label">Set Title</label>
+                        <input type="text" class="form-control" id="setTitle" name="title" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" form="createSetForm" class="btn btn-primary">Create Set</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

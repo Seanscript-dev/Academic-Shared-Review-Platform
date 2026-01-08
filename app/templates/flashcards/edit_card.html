@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}{{ action }} Flashcard - {{ set.title }}{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/flashcards.css') }}">
+<div class="edit-card-form">
+    <h4>{{ action }} Flashcard in "{{ set.title }}"</h4>
+    <form method="post">
+        <label for="question">Question</label>
+        <textarea id="question" name="question" rows="3" required>{% if card %}{{ card.question }}{% endif %}</textarea>
+        <label for="answer">Answer</label>
+        <textarea id="answer" name="answer" rows="3" required>{% if card %}{{ card.answer }}{% endif %}</textarea>
+        <button type="submit">{{ action }} Card</button>
+        <a href="{{ url_for('flashcards.view_set', set_id=set.id) }}">Cancel</a>
+    </form>
+</div>
+{% endblock %}
