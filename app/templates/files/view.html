@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}View File - {{ file.title }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-header">
+                    <h4>{{ file.title }}</h4>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <strong>Description:</strong> {{ file.description }}
+                    </div>
+                    <div class="mb-3">
+                        <strong>Filename:</strong> {{ file.filename }}
+                    </div>
+                    <div class="mb-3">
+                        <strong>Size:</strong> {{ file_size }} bytes
+                    </div>
+                    <div class="mb-3">
+                        <strong>Uploaded:</strong> {{ file.uploaded_at.strftime('%Y-%m-%d %H:%M:%S') }}
+                    </div>
+
+                    {% if is_text and content %}
+                    <div class="mb-3">
+                        <strong>Content Preview:</strong>
+                        <pre class="bg-light p-3 rounded" style="max-height: 400px; overflow-y: auto;"><code>{{ content }}</code></pre>
+                        {% if content|length >= 5000 %}
+                        <small class="text-muted">Content truncated to first 5000 characters.</small>
+                        {% endif %}
+                    </div>
+                    {% else %}
+                    <div class="alert alert-info">
+                        <i class="fas fa-file"></i> This file type cannot be previewed directly. Use the download button below to view the file.
+                    </div>
+                    {% endif %}
+
+                    <div class="d-flex gap-2">
+                        <a href="{{ url_for('files.download_file', file_id=file.id) }}" class="btn btn-primary">
+                            <i class="fas fa-download"></i> Download File
+                        </a>
+                        <a href="{{ url_for('files.list_files') }}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Back to Files
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
