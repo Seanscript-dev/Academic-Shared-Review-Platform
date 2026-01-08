@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Users{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Manage Users</h1>
+    <a href="{{ url_for('auth.admin_create_user') }}" class="btn btn-success mb-3">Create New User</a>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.username }}</td>
+                <td>{{ user.email or 'N/A' }}</td>
+                <td>{{ user.role }}</td>
+                <td>
+                    <a href="{{ url_for('auth.admin_edit_user', user_id=user.id) }}" class="btn btn-sm btn-primary">Edit</a>
+                    {% if user.id != current_user.id %}
+                    <form method="POST" action="{{ url_for('auth.admin_delete_user', user_id=user.id) }}" style="display: inline;">
+                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
+                    </form>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

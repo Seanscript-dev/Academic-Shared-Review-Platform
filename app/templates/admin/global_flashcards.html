@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Global Flashcards{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Global Flashcards</h1>
+    <a href="{{ url_for('auth.admin_create_global_flashcard_set') }}" class="btn btn-success mb-3">Create Global Flashcard Set</a>
+    <div class="row">
+        {% for set in flashcard_sets %}
+        <div class="col-md-4 mb-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">{{ set.title }}</h5>
+                    <p class="card-text">{{ set.cards|length }} cards</p>
+                    <a href="{{ url_for('flashcards.set_detail', set_id=set.id) }}" class="btn btn-primary">View</a>
+                    <a href="{{ url_for('auth.admin_edit_global_flashcard_set', set_id=set.id) }}" class="btn btn-secondary">Edit</a>
+                    <form method="POST" action="{{ url_for('auth.admin_delete_global_flashcard_set', set_id=set.id) }}" style="display: inline;">
+                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

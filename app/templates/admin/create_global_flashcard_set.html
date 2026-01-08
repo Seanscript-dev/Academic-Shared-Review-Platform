@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}Create Global Flashcard Set{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Create Global Flashcard Set</h1>
+    <form method="POST">
+        <div class="mb-3">
+            <label for="title" class="form-label">Title</label>
+            <input type="text" class="form-control" id="title" name="title" required>
+        </div>
+        <div id="cards">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5>Card 1</h5>
+                    <div class="mb-3">
+                        <label class="form-label">Question</label>
+                        <textarea class="form-control" name="questions[]" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Answer</label>
+                        <textarea class="form-control" name="answers[]" required></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button type="button" class="btn btn-secondary mb-3" onclick="addCard()">Add Another Card</button>
+        <br>
+        <button type="submit" class="btn btn-success">Create Set</button>
+        <a href="{{ url_for('auth.admin_global_flashcards') }}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+
+<script>
+let cardCount = 1;
+function addCard() {
+    cardCount++;
+    const cardsDiv = document.getElementById('cards');
+    const cardDiv = document.createElement('div');
+    cardDiv.className = 'card mb-3';
+    cardDiv.innerHTML = `
+        <div class="card-body">
+            <h5>Card ${cardCount}</h5>
+            <div class="mb-3">
+                <label class="form-label">Question</label>
+                <textarea class="form-control" name="questions[]" required></textarea>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Answer</label>
+                <textarea class="form-control" name="answers[]" required></textarea>
+            </div>
+        </div>
+    `;
+    cardsDiv.appendChild(cardDiv);
+}
+</script>
+{% endblock %}
