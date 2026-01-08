@@ -1,0 +1,6 @@
+- [x] Override navbar background to use custom primary color (--primary-60) for consistency with the theme
+- [x] Hide the loader by default (display: none) assuming it's shown via JS during loading
+- [x] Adjust nav-link hover styles for better visibility on the dark navbar
+- [x] Fix database URI path to point to correct instance/data.db location
+- [x] Fix login function to check password hash before logging in user
+- [x] Fix background image URL in CSS to correctly reference no.jpg
