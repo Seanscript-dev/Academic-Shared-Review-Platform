@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Review App{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <div class="jumbotron bg-light p-5 rounded">
+            <h1 class="display-4">Welcome to REVUE</h1>
+            <p class="lead">Your comprehensive tool for managing study materials, files, and flashcards.</p>
+            <hr class="my-4">
+            <p>Organize your learning resources efficiently and boost your productivity.</p>
+            <a class="btn btn-primary btn-lg" href="{{ url_for('files.list_files') }}" role="button">View Files</a>
+            <a class="btn btn-success btn-lg" href="{{ url_for('flashcards.sets') }}" role="button">Browse Flashcards</a>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-5">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">File Management</h5>
+                <p class="card-text">Upload, organize, and manage your study files securely.</p>
+                <a href="{{ url_for('files.list_files') }}" class="btn btn-primary">Go to Files</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Flashcard Sets</h5>
+                <p class="card-text">Create and review flashcards to enhance your learning.</p>
+                <a href="{{ url_for('flashcards.sets') }}" class="btn btn-success">Go to Flashcards</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">User Account</h5>
+                <p class="card-text">Manage your profile and access personalized features.</p>
+                {% if current_user.is_authenticated %}
+                    <a href="{{ url_for('auth.profile') }}" class="btn btn-info">My Profile</a>
+                {% else %}
+                    <a href="{{ url_for('auth.login') }}" class="btn btn-info">Login</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
