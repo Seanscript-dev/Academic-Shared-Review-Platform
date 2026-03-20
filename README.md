@@ -1,6 +1,14 @@
 # Academic Shared Review Platform
 # 📋 Overview
 The Academic Shared Review Platform is a web application designed to facilitate collaborative peer review and feedback sharing for academic papers. Built with a Flask backend and modern web technologies, this platform helps researchers and academics share, review, and improve scholarly work through a structured review process.
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/76344012-9abd-4412-a93e-b8f222002c98" />
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/5f1fa206-ab80-4a1e-a5c9-ae228a0ee375" />
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/c6367885-cef9-4ee5-815e-007c76b082f7" />
+![Uploading image.png…]()
+
+
+
+
 
  # ✨ Key Features
 Paper Submission & Management: Upload and organize academic papers
